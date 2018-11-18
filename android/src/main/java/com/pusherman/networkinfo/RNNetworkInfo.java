@@ -3,7 +3,6 @@ package com.pusherman.networkinfo;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.facebook.react.bridge.Callback;
@@ -60,7 +59,11 @@ public class RNNetworkInfo extends ReactContextBaseJavaModule {
 
         for (InterfaceAddress address : getInetAddresses()) {
             if (!address.getAddress().isLoopbackAddress()/*address.getAddress().toString().equalsIgnoreCase(ip)*/) {
-                ipAddress = address.getBroadcast().toString();
+                InetAddress broadcast = address.getBroadcast();
+                if (null != broadcast) {
+                    ipAddress = address.getBroadcast().getHostAddress().toString();
+                }
+                if (null != ipAddress) break;
             }
         }
 
